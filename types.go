@@ -1,9 +1,6 @@
 package radius
 
-import (
-	"encoding/binary"
-	"io"
-)
+import "io"
 
 // AttributeType defines types for an Attribute
 type AttributeType int64
@@ -29,5 +26,6 @@ const (
 
 // Write writes the attribute type to the given writer
 func (a AttributeType) Write(w io.Writer) error {
-	return binary.Write(w, binary.BigEndian, int8(a))
+	_, err := w.Write([]byte{byte(a)})
+	return err
 }
