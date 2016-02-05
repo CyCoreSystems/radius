@@ -1,9 +1,6 @@
 package radius
 
-import (
-	"encoding/binary"
-	"io"
-)
+import "io"
 
 // A PacketCode is a code that defines the type of the packet
 type PacketCode int64
@@ -20,5 +17,6 @@ const (
 
 // Write writes the packet code to the writer
 func (code PacketCode) Write(w io.Writer) error {
-	return binary.Write(w, binary.BigEndian, int8(code))
+	_, err := w.Write([]byte{byte(code)})
+	return err
 }
