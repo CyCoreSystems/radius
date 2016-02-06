@@ -29,3 +29,22 @@ func TestPacketCodeWriting(t *testing.T) {
 		})
 	})
 }
+
+func TestPacketCodeReading(t *testing.T) {
+	Convey("Given an empty packet code", t, func() {
+		var a PacketCode
+		r := bytes.NewBuffer([]byte{byte(AccountingRequest)})
+
+		Convey("When packet code is read", func() {
+			err := a.Read(r)
+
+			Convey("Error should be nil", func() {
+				So(err, ShouldBeNil)
+			})
+
+			Convey("Packet code should be AccountingRequest", func() {
+				So(a, ShouldEqual, AccountingRequest)
+			})
+		})
+	})
+}

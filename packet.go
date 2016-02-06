@@ -64,3 +64,36 @@ func (p *Packet) Write(wx io.Writer) error {
 
 	return nil
 }
+
+func (p *Packet) Read(rx io.Reader) error {
+	r := bufio.NewReader(rx)
+
+	if err := p.Code.Read(r); err != nil {
+		return err
+	}
+
+	if err := p.ID.Read(r); err != nil {
+		return err
+	}
+
+	var length uint16
+
+	if err := binary.Read(r, binary.BigEndian, &length); err != nil {
+		return err
+	}
+
+	// just discard hash for now
+	var hash []byte = make([]byte, 16)
+
+	if _, err := r.Read(hash); err != nil {
+		return err
+	}
+
+	// just discard attributes for now
+	var buf []byte = make([]byte, length-20)
+	if _, err := r.Read(buf); err != nil {
+		return err
+	}
+
+	return nil
+}

@@ -29,3 +29,23 @@ func TestIDWrite(t *testing.T) {
 		})
 	})
 }
+
+func TestIDRead(t *testing.T) {
+
+	Convey("Given an empty identifier", t, func() {
+		a := Identifier(0)
+		r := bytes.NewBuffer([]byte{12})
+
+		Convey("When identifier is read", func() {
+			err := a.Read(r)
+
+			Convey("Error should be nil", func() {
+				So(err, ShouldBeNil)
+			})
+
+			Convey("Identifier should be 12", func() {
+				So(a, ShouldEqual, 12)
+			})
+		})
+	})
+}

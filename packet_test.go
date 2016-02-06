@@ -19,7 +19,7 @@ func TestPacket(t *testing.T) {
 
 		w := bytes.NewBuffer([]byte{})
 
-		Convey("When attribute is written", func() {
+		Convey("When packet is written", func() {
 			err := a.Write(w)
 			b := w.Bytes()
 
@@ -39,6 +39,36 @@ func TestPacket(t *testing.T) {
 				})
 			*/
 		})
+
+		var b Packet
+		r := bytes.NewBuffer([]byte{
+			// header
+			5, 12, 0, 26,
+
+			// hash
+			0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
+
+			// attributes
+			0, 0, 0, 0, 2,
+		})
+		Convey("When packet is read", func() {
+			err := b.Read(r)
+
+			Convey("Error should be nil", func() {
+				So(err, ShouldBeNil)
+			})
+
+			Convey("ID should be AccountingResponse", func() {
+				So(b.Code, ShouldEqual, AccountingResponse)
+			})
+
+			Convey("ID should be 12", func() {
+				So(b.ID, ShouldEqual, 12)
+			})
+
+			//TODO: finish test, use byte body
+		})
+
 	})
 
 }
