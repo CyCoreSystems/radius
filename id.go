@@ -15,7 +15,7 @@ func (id Identifier) Write(w io.Writer) error {
 
 // Read reads the identifier from the given reader
 func (id *Identifier) Read(r io.Reader) error {
-	var b []byte = make([]byte, 1)
+	b := make([]byte, 1)
 	_, err := r.Read(b)
 
 	*id = Identifier(b[0])

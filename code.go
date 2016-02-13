@@ -9,7 +9,10 @@ const (
 
 	// Packet codes for RFC2866/Accounting
 
-	AccountingRequest  PacketCode = 4
+	// AccountingRequest represents a RADIUS accounting request packet
+	AccountingRequest PacketCode = 4
+
+	// AccountingResponse respresents a RADIUS accounting response packet
 	AccountingResponse PacketCode = 5
 
 	// --
@@ -23,7 +26,7 @@ func (code PacketCode) Write(w io.Writer) error {
 
 // Read reads the packet code from the reader
 func (code *PacketCode) Read(r io.Reader) error {
-	var b []byte = make([]byte, 1)
+	b := make([]byte, 1)
 	_, err := r.Read(b)
 
 	*code = PacketCode(b[0])

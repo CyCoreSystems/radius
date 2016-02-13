@@ -15,6 +15,7 @@ type Packet struct {
 	auth Authenticator
 }
 
+// Length returns the length of the packet
 func (p *Packet) Length() int16 {
 	length := 0
 	length += 4  // one for code; one for ID; two for length
@@ -83,14 +84,14 @@ func (p *Packet) Read(rx io.Reader) error {
 	}
 
 	// just discard hash for now
-	var hash []byte = make([]byte, 16)
+	hash := make([]byte, 16)
 
 	if _, err := r.Read(hash); err != nil {
 		return err
 	}
 
 	// just discard attributes for now
-	var buf []byte = make([]byte, length-20)
+	buf := make([]byte, length-20)
 	if _, err := r.Read(buf); err != nil {
 		return err
 	}

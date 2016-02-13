@@ -12,6 +12,7 @@ type Authenticator interface {
 	Calculate(p *Packet) ([]byte, error)
 }
 
+// AccountingRequestAuthenticator returns an implementation of Authenticator used for sending RADIUS accounting requests
 func AccountingRequestAuthenticator(sharedSecret string) Authenticator {
 	return &reqAuth{
 		sharedSecret: sharedSecret,
