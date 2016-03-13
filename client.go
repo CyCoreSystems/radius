@@ -3,11 +3,15 @@ package radius
 import (
 	"errors"
 	"net"
+	"sync"
 )
 
 // A Client is the representation of a connection to a RADIUS server
 type Client struct {
 	opts *Options
+
+	idCounter int64
+	idMutex   sync.Mutex
 }
 
 // Close closes the client
@@ -25,6 +29,12 @@ func (cl *Client) Send(p *Packet) (*Packet, error) {
 	if err != nil {
 		return nil, err
 	}
+
+	//TODO: do this another way? atomic int package?
+	cl.idMutex.Lock()
+	p.ID = Identifier(cl.idCounter)
+	cl.idCounter++
+	cl.idMutex.Unlock()
 
 	// Write request
 	if err := p.Write(conn); err != nil {
