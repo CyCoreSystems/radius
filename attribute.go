@@ -23,6 +23,25 @@ var (
 
 	// ?
 	AccountingOff = Attribute{AccountingStatusType, 6, fourOctet(8)}
+
+	UserRequest        = Attribute{AccountingTerminateCause, 6, fourOctet(1)}
+	LostCarrier        = Attribute{AccountingTerminateCause, 6, fourOctet(2)}
+	LostService        = Attribute{AccountingTerminateCause, 6, fourOctet(3)}
+	IdleTimeout        = Attribute{AccountingTerminateCause, 6, fourOctet(4)}
+	SessionTimeout     = Attribute{AccountingTerminateCause, 6, fourOctet(5)}
+	AdminReset         = Attribute{AccountingTerminateCause, 6, fourOctet(6)}
+	AdminReboot        = Attribute{AccountingTerminateCause, 6, fourOctet(7)}
+	PortError          = Attribute{AccountingTerminateCause, 6, fourOctet(8)}
+	NASError           = Attribute{AccountingTerminateCause, 6, fourOctet(9)}
+	NASRequest         = Attribute{AccountingTerminateCause, 6, fourOctet(10)}
+	NASReboot          = Attribute{AccountingTerminateCause, 6, fourOctet(11)}
+	PortUnneeded       = Attribute{AccountingTerminateCause, 6, fourOctet(12)}
+	PortPreempted      = Attribute{AccountingTerminateCause, 6, fourOctet(13)}
+	PortSuspended      = Attribute{AccountingTerminateCause, 6, fourOctet(14)}
+	ServiceUnavailable = Attribute{AccountingTerminateCause, 6, fourOctet(15)}
+	Callback           = Attribute{AccountingTerminateCause, 6, fourOctet(16)}
+	UserError          = Attribute{AccountingTerminateCause, 6, fourOctet(17)}
+	HostRequest        = Attribute{AccountingTerminateCause, 6, fourOctet(18)}
 )
 
 // An AttributeValue is a value attached to an attribute
