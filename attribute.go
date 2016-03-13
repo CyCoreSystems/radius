@@ -75,7 +75,7 @@ func (attr *Attribute) Write(w io.Writer) error {
 
 // StringAttribute builds an attribute of length >= 3 with the given string
 func StringAttribute(t AttributeType, str string) Attribute {
-	return Attribute{t, int8(3 + len(str)), []Writer{stringWriter(str)}}
+	return Attribute{t, int8(2 + len(str)), []Writer{stringWriter(str)}}
 }
 
 type stringWriter string
