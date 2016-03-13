@@ -30,6 +30,10 @@ func (cl *Client) NewSession(ID string, attrs ...Attribute) *Session {
 		attrs: attrs,
 	}
 
+	cl.sessionLock.Lock()
+	cl.sessions = append(cl.sessions, sess)
+	cl.sessionLock.Unlock()
+
 	sess.start(attrs...)
 
 	return sess
