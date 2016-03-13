@@ -46,6 +46,8 @@ const (
 	AccountingMultiLinkCount AttributeType = 51
 	// --
 
+	// AccessUserName is used to mark the attribute as the username field
+	AccessUserName AttributeType = 1
 )
 
 // Write writes the attribute type to the given writer

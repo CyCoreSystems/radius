@@ -73,6 +73,18 @@ func (attr *Attribute) Write(w io.Writer) error {
 	return nil
 }
 
+// StringAttribute builds an attribute of length >= 3 with the given string
+func StringAttribute(t AttributeType, str string) Attribute {
+	return Attribute{t, int8(3 + len(str)), []Writer{stringWriter(str)}}
+}
+
+type stringWriter string
+
+func (s stringWriter) Write(w io.Writer) error {
+	_, err := w.Write([]byte(s))
+	return err
+}
+
 // shortcut to represent a value as 4 octets
 func fourOctet(i int) []Writer {
 	return []Writer{
