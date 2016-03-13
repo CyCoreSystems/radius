@@ -8,11 +8,8 @@ type Options struct {
 }
 
 // NewClient creates a new client from the given options
-func (o *Options) NewClient() (*Client, error) {
-
-	cl := &Client{
+func NewClient(o *Options) *Client {
+	return &Client{
 		opts: o,
 	}
-
-	return cl, nil
 }
