@@ -59,7 +59,7 @@ func (s *Session) start(attrs ...Attribute) {
 }
 
 // Stop stops the session
-func (s *Session) Stop(terminateCause Attribute) {
+func (s *Session) Stop(attrs ...Attribute) {
 	s.once.Do(func() {
 		s.stopTime = time.Now()
 
@@ -74,6 +74,10 @@ func (s *Session) Stop(terminateCause Attribute) {
 		a = append(a, Attribute{AccountingInputOctets, 6, []Writer{WriterFunc(func(w io.Writer) error {
 			return binary.Write(w, binary.BigEndian, s.inputOctets)
 		})}})
+
+		for _, ax := range attrs {
+			a = append(a, ax)
+		}
 
 		/*
 			 * TODO: invalid Request Authenticator is raised by freeradius when this is included
