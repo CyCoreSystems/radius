@@ -80,39 +80,36 @@ func handle(conn io.ReadWriteCloser, session *radius.Session) {
 				conn.Write(out)
 			}
 		case "cowsay":
-			func() {
+			cowsay := exec.Command("cowsay")
+			cowsayInput, err := cowsay.StdinPipe()
+			if err != nil {
+				conn.Write([]byte("error running cowsay: "))
+				conn.Write([]byte(err.Error()))
+				conn.Write([]byte("\n"))
+				return
+			}
+			cowsayOutput, err := cowsay.StdoutPipe()
+			if err != nil {
+				conn.Write([]byte("error running cowsay: "))
+				conn.Write([]byte(err.Error()))
+				conn.Write([]byte("\n"))
+				return
+			}
 
-				cowsay := exec.Command("cowsay")
-				cowsayInput, err := cowsay.StdinPipe()
-				if err != nil {
-					conn.Write([]byte("error running cowsay: "))
-					conn.Write([]byte(err.Error()))
-					conn.Write([]byte("\n"))
-					return
-				}
-				cowsayOutput, err := cowsay.StdoutPipe()
-				if err != nil {
-					conn.Write([]byte("error running cowsay: "))
-					conn.Write([]byte(err.Error()))
-					conn.Write([]byte("\n"))
-					return
-				}
+			cowsay.Start()
 
-				cowsay.Start()
+			fortune := exec.Command("fortune")
+			body, err := fortune.Output()
+			if err != nil {
+				conn.Write([]byte("error running fortune: "))
+				conn.Write([]byte(err.Error()))
+				conn.Write([]byte("\n"))
+				return
+			}
+			cowsayInput.Write(body)
+			cowsayInput.Close()
 
-				fortune := exec.Command("fortune")
-				body, err := fortune.Output()
-				if err != nil {
-					conn.Write([]byte("error running fortune: "))
-					conn.Write([]byte(err.Error()))
-					conn.Write([]byte("\n"))
-					return
-				}
-				cowsayInput.Write(body)
-				cowsayInput.Close()
-
-				io.Copy(conn, cowsayOutput)
-			}()
+			io.Copy(conn, cowsayOutput)
 		default:
 			conn.Write([]byte("Unknown command: "))
 			conn.Write([]byte(line))
