@@ -58,6 +58,42 @@ func (s *Session) start(attrs ...Attribute) {
 	s.startTime = time.Now()
 }
 
+// InterimUpdate sends an update
+func (s *Session) InterimUpdate(attrs ...Attribute) {
+
+	//sessionTime := s.stopTime.Sub(s.startTime)
+
+	a := s.attrs
+	a = append(a, InterimUpdate)
+	a = append(a, StringAttribute(AccountingSessionID, s.ID))
+
+	// NOTE: The spec says to not send octet counts in interim updates, another spec says to
+
+	a = append(a, Attribute{AccountingOutputOctets, 6, []Writer{WriterFunc(func(w io.Writer) error {
+		return binary.Write(w, binary.BigEndian, s.outputOctets)
+	})}})
+	a = append(a, Attribute{AccountingInputOctets, 6, []Writer{WriterFunc(func(w io.Writer) error {
+		return binary.Write(w, binary.BigEndian, s.inputOctets)
+	})}})
+
+	for _, ax := range attrs {
+		a = append(a, ax)
+	}
+
+	/*
+		 * TODO: invalid Request Authenticator is raised by freeradius when this is included
+		a = append(a, Attribute{AccountingSessionTime, 6, []Writer{WriterFunc(func(w io.Writer) error {
+			return binary.Write(w, binary.BigEndian, sessionTime*time.Second)
+		})}})
+	*/
+	pkt := &Packet{
+		Code:       AccountingRequest,
+		Attributes: a,
+	}
+
+	s.cl.Send(pkt)
+}
+
 // Stop stops the session
 func (s *Session) Stop(attrs ...Attribute) {
 	s.once.Do(func() {
