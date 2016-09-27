@@ -4,6 +4,7 @@ import (
 	"bufio"
 	"io"
 	"net"
+	"os"
 	"os/exec"
 	"strings"
 
@@ -32,7 +33,11 @@ func main() {
 		}
 
 		id := uuid.New()
-		session := rc.NewSession(id, radius.StringAttribute(radius.AccessUserName, "admin"))
+		h, _ := os.Hostname()
+		session := rc.NewSession(id,
+			radius.StringAttribute(radius.AccessUserName, "admin"),
+			radius.StringAttribute(32, h), // NAS-Identifier
+		)
 
 		go handle(conn, session)
 	}
