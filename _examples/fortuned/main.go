@@ -118,5 +118,7 @@ func handle(conn io.ReadWriteCloser, session *radius.Session) {
 			conn.Write([]byte(line))
 			conn.Write([]byte("\n"))
 		}
+
+		session.InterimUpdate()
 	}
 }
