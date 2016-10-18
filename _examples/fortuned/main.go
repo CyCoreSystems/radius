@@ -37,7 +37,10 @@ func main() {
 		session := rc.NewSession(id,
 			radius.StringAttribute(radius.AccessUserName, "admin"),
 			radius.StringAttribute(32, h), // NAS-Identifier
+			radius.StringAttribute(43, h), // NAS-Identifier
 		)
+
+		session.Start()
 
 		go handle(conn, session)
 	}

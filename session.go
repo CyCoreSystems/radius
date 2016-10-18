@@ -36,13 +36,11 @@ func (cl *Client) NewSession(ID string, attrs ...Attribute) *Session {
 	cl.sessions = append(cl.sessions, sess)
 	cl.sessionLock.Unlock()
 
-	sess.start(attrs...)
-
 	return sess
 }
 
 // Start starts the session
-func (s *Session) start(attrs ...Attribute) {
+func (s *Session) Start(attrs ...Attribute) {
 
 	a := s.attrs
 	a = append(a, AccountingStart)
