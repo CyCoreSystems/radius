@@ -2,6 +2,7 @@ package main
 
 import (
 	"bufio"
+	"fmt"
 	"io"
 	"net"
 	"os"
@@ -40,7 +41,9 @@ func main() {
 			radius.StringAttribute(43, h), // NAS-Identifier
 		)
 
-		session.Start()
+		if err := session.Start(); err != nil {
+			fmt.Printf("error starting session: '%v'\n", err)
+		}
 
 		go handle(conn, session)
 	}
@@ -69,7 +72,9 @@ func handle(conn io.ReadWriteCloser, session *radius.Session) {
 		line = strings.TrimSpace(line)
 		switch line {
 		case "quit":
-			session.Stop(radius.UserRequest)
+			if err := session.Stop(radius.UserRequest); err != nil {
+				fmt.Printf("Error stopping session '%v'\n", err)
+			}
 			conn.Close()
 			return
 		case "fortune":

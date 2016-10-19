@@ -40,7 +40,7 @@ func (cl *Client) NewSession(ID string, attrs ...Attribute) *Session {
 }
 
 // Start starts the session
-func (s *Session) Start(attrs ...Attribute) {
+func (s *Session) Start(attrs ...Attribute) error {
 
 	a := s.attrs
 	a = append(a, AccountingStart)
@@ -51,13 +51,15 @@ func (s *Session) Start(attrs ...Attribute) {
 		Attributes: a,
 	}
 
-	s.cl.Send(pkt)
+	_, err := s.cl.Send(pkt)
 
 	s.startTime = time.Now()
+
+	return err
 }
 
 // InterimUpdate sends an update
-func (s *Session) InterimUpdate(attrs ...Attribute) {
+func (s *Session) InterimUpdate(attrs ...Attribute) error {
 
 	//sessionTime := s.stopTime.Sub(s.startTime)
 
@@ -89,11 +91,12 @@ func (s *Session) InterimUpdate(attrs ...Attribute) {
 		Attributes: a,
 	}
 
-	s.cl.Send(pkt)
+	_, err := s.cl.Send(pkt)
+	return err
 }
 
 // Stop stops the session
-func (s *Session) Stop(attrs ...Attribute) {
+func (s *Session) Stop(attrs ...Attribute) (err error) {
 	s.once.Do(func() {
 		s.stopTime = time.Now()
 
@@ -124,8 +127,10 @@ func (s *Session) Stop(attrs ...Attribute) {
 			Attributes: a,
 		}
 
-		s.cl.Send(pkt)
+		_, err = s.cl.Send(pkt)
 	})
+
+	return
 }
 
 func (s *Session) AddInputOctets(i int32) {
