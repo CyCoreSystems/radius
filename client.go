@@ -4,8 +4,6 @@ import (
 	"errors"
 	"net"
 	"sync"
-
-	"golang.org/x/net/context"
 )
 
 // A Client is the representation of a connection to a RADIUS server
@@ -15,17 +13,12 @@ type Client struct {
 	idCounter int64
 	idMutex   sync.Mutex
 
-	ctx      context.Context
-	cancelFn context.CancelFunc
-
 	sessions    []*Session
 	sessionLock sync.Mutex
 }
 
 // Close closes the client and any related sessions
 func (cl *Client) Close() {
-	cl.cancelFn()
-
 	cl.sessionLock.Lock()
 	for _, sess := range cl.sessions {
 		sess.Stop(NASReboot)
