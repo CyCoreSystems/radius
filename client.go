@@ -4,6 +4,7 @@ import (
 	"errors"
 	"net"
 	"sync"
+	"time"
 )
 
 // A Client is the representation of a connection to a RADIUS server
@@ -38,6 +39,10 @@ func (cl *Client) Send(p *Packet) (*Packet, error) {
 	if err != nil {
 		return nil, err
 	}
+
+	// RADIUS transactions must be time-scoped, since they are
+	// UDP-based, with no connection metadata
+	conn.SetDeadline(time.Now().Add(time.Second))
 
 	//TODO: do this another way? atomic int package?
 	cl.idMutex.Lock()
